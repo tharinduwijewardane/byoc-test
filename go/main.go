@@ -37,6 +37,13 @@ func main() {
 			host := data["host"]
 			args := data["args"]
 
+			if len(host) == 0 {
+				host = "http://postman-echo.com"
+			}
+			if len(args) == 0 {
+				args = "get?foo1=bar1&foo2=bar2"
+			}
+
 			resp, err := http.Get(fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(args, "/")))
 			if err != nil {
 				w.Write([]byte(err.Error()))
