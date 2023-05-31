@@ -3,13 +3,6 @@ info:
   title: Choreo BYOC Examples
   description: This repository contains demo API implemented in different frameworks to showcase capabilities of choreo.
   version: '0.1'
-servers:
-  - url: http://127.0.0.1:9090
-  - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-  - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-  - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-  - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-  - url: https://choreo.isala.me/itcu/byocjava/1.0.0
 paths:
   /proxy/:
     post:
@@ -39,20 +32,6 @@ paths:
               schema:
                 type: string
               examples: {}
-      servers:
-        - url: http://127.0.0.1:9090
-        - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-        - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-        - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-        - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-        - url: https://choreo.isala.me/itcu/byocjava/1.0.0
-    servers:
-      - url: http://127.0.0.1:9090
-      - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-      - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-      - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-      - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-      - url: https://choreo.isala.me/itcu/byocjava/1.0.0
   /healthz/:
     get:
       description: Auto generated using Swagger Inspector
@@ -70,20 +49,6 @@ paths:
                 '0':
                   value: |
                     {"healthy":true}
-      servers:
-        - url: http://127.0.0.1:9090
-        - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-        - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-        - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-        - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-        - url: https://choreo.isala.me/itcu/byocjava/1.0.0
-    servers:
-      - url: http://127.0.0.1:9090
-      - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-      - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-      - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-      - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-      - url: https://choreo.isala.me/itcu/byocjava/1.0.0
   /:
     get:
       description: Auto generated using Swagger Inspector
@@ -101,20 +66,6 @@ paths:
                 '0':
                   value: |
                     {"active":true}
-      servers:
-        - url: http://127.0.0.1:9090
-        - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-        - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-        - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-        - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-        - url: https://choreo.isala.me/itcu/byocjava/1.0.0
-    servers:
-      - url: http://127.0.0.1:9090
-      - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-      - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-      - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-      - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-      - url: https://choreo.isala.me/itcu/byocjava/1.0.0
   /hello/:
     get:
       description: Auto generated using Swagger Inspector
@@ -132,17 +83,3 @@ paths:
               schema:
                 type: string
               examples: {}
-      servers:
-        - url: http://127.0.0.1:9090
-        - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-        - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-        - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-        - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-        - url: https://choreo.isala.me/itcu/byocjava/1.0.0
-    servers:
-      - url: http://127.0.0.1:9090
-      - url: https://choreo.isala.me/itcu/byocpython/1.0.0
-      - url: https://choreo.isala.me/itcu/byocgo/1.0.0
-      - url: https://choreo.isala.me/itcu/byocnode/1.0.0
-      - url: https://choreo.isala.me/itcu/byocrust/1.0.0
-      - url: https://choreo.isala.me/itcu/byocjava/1.0.0
