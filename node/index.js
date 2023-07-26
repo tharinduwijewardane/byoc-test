@@ -12,6 +12,12 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 app.use(morgan('combined'))
 
 app.get('/', (req, res) => {
+    console.log("This is a log")
+    console.debug("This is a debug log")
+    console.info("This is an info log")
+    console.warn("This is a warn log")
+    console.error("This is an error log")
+    console.trace("This is a trace log")
     res.send({'active': true})
 });
 

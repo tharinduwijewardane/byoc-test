@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,15 +11,22 @@ import (
 )
 
 func main() {
+	logger, _ := zap.NewProduction()
+	defer logger.Sync() // flushes buffer, if any
+	SugaredLogger := logger.Sugar()
+
 	httpPort := 9090
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		SugaredLogger.Debug("This is a debug log")
+		SugaredLogger.Info("This is an info log")
+		SugaredLogger.Warn("This is a warn log")
+		SugaredLogger.Error("This is an error log")
 
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, "{\"active\": true}")
 	})
 	http.HandleFunc("/healthz/", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-
 		fmt.Fprintf(w, "{\"healthy\": true}")
 	})
 	http.HandleFunc("/hello/", func(w http.ResponseWriter, req *http.Request) {

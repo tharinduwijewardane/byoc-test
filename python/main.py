@@ -2,11 +2,16 @@ import json
 from flask import Flask, jsonify, request
 import requests
 import os
+import logging
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
+    logging.info('This is an info log')
+    logging.warning('This is a warning log')
+    logging.error('This is an error log')
+    logging.debug('This is a debug log')
     return jsonify({'active': True})
 
 @app.route('/healthz/')
