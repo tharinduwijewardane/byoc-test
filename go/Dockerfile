@@ -1,5 +1,5 @@
 
-FROM golang:1.18.0 as build-env
+FROM golang:1.20.0 as build-env
 
 RUN mkdir /app
 WORKDIR /app
