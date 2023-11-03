@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -35,16 +36,24 @@ func main() {
 			}
 
 			host := data["host"]
-			args := data["args"]
+			path := data["path"]
 
 			if len(host) == 0 {
-				host = "http://postman-echo.com"
+				if h, ok := os.LookupEnv("HOST"); ok {
+					host = h
+				} else {
+					host = "http://postman-echo.com"
+				}
 			}
-			if len(args) == 0 {
-				args = "get?foo1=bar1&foo2=bar2"
+			if len(path) == 0 {
+				if a, ok := os.LookupEnv("PATH"); ok {
+					path = a
+				} else {
+					path = "get?foo1=bar1&foo2=bar2"
+				}
 			}
 
-			resp, err := http.Get(fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(args, "/")))
+			resp, err := http.Get(fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(path, "/")))
 			if err != nil {
 				w.Write([]byte(err.Error()))
 				w.WriteHeader(http.StatusInternalServerError)
