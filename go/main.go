@@ -1,63 +1,32 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
-	"strings"
+	"strconv"
 )
 
 func main() {
 	httpPort := 9090
-	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
 
-		fmt.Fprintf(w, "{\"active\": true}")
-	})
-	http.HandleFunc("/healthz/", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-
-		fmt.Fprintf(w, "{\"healthy\": true}")
-	})
-	http.HandleFunc("/hello/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, "Hello %s", req.URL.Query().Get("name"))
-	})
-	http.HandleFunc("/proxy/", func(w http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodPost {
-			decoder := json.NewDecoder(req.Body)
-			var data map[string]string
-			err := decoder.Decode(&data)
-			if err != nil {
-				w.Write([]byte(err.Error()))
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-
-			host := data["host"]
-			args := data["args"]
-
-			if len(host) == 0 {
-				host = "http://postman-echo.com"
-			}
-			if len(args) == 0 {
-				args = "get?foo1=bar1&foo2=bar2"
-			}
-
-			resp, err := http.Get(fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(args, "/")))
-			if err != nil {
-				w.Write([]byte(err.Error()))
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-			body, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				w.Write([]byte(err.Error()))
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-			w.Write(body)
+	http.HandleFunc("/squareroot/", func(w http.ResponseWriter, req *http.Request) {
+		numberStr := req.URL.Query().Get("number")
+		if numberStr == "" {
+			log.Printf("Error: number can't be empty")
+			http.Error(w, "Error: number can't be empty", http.StatusBadRequest)
 			return
 		}
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		num, err := strconv.Atoi(numberStr)
+		if err != nil {
+			log.Printf("Error: number must be an integer")
+			http.Error(w, "Error: number must be an integer", http.StatusBadRequest)
+			return
+		}
+		sqrt := math.Sqrt(float64(num))
+		log.Printf("Square root of %d is %f", num, sqrt)
+		_, _ = fmt.Fprintf(w, "Square root of %d is %f\n", num, sqrt)
 	})
 
 	fmt.Printf("listening on %v\n", httpPort)

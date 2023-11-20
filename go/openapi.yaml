@@ -4,77 +4,15 @@ info:
   description: This repository contains demo API implemented in different frameworks to showcase capabilities of choreo.
   version: '0.1'
 paths:
-  /proxy/:
-    post:
-      description: Auto generated using Swagger Inspector
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                args:
-                  type: string
-                host:
-                  type: string
-            examples:
-              '0':
-                value: |-
-                  {
-                      "host": "http://postman-echo.com",
-                      "args": "get?foo1=bar1&foo2=bar2"
-                  }
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            text/html; charset=utf-8:
-              schema:
-                type: string
-              examples: {}
-  /healthz/:
-    get:
-      description: Auto generated using Swagger Inspector
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  healthy:
-                    type: boolean
-              examples:
-                '0':
-                  value: |
-                    {"healthy":true}
-  /:
-    get:
-      description: Auto generated using Swagger Inspector
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  healthy:
-                    type: boolean
-              examples:
-                '0':
-                  value: |
-                    {"active":true}
-  /hello/:
+  /squareroot/:
     get:
       description: Auto generated using Swagger Inspector
       parameters:
-        - name: name
+        - name: number
           in: query
           schema:
-            type: string
-          example: world
+            type: integer
+          example: 4
       responses:
         '200':
           description: Auto generated using Swagger Inspector

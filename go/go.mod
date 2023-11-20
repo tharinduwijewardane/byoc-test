@@ -1,3 +1,3 @@
-module github.com/MrSupiri/choreo-byoc-examples/go
+module github.com/tharinduwijewardane/byoc-test/go
 
 go 1.18
