@@ -11,7 +11,7 @@ paths:
         - name: number
           in: query
           schema:
-            type: integer
+            type: string #to demo an error scenario
           example: 4
       responses:
         '200':
