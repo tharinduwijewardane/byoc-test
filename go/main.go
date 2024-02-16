@@ -6,5 +6,7 @@ import (
 )
 
 func main() {
-	log.Println("Run completed at: " + time.Now().String())
+	for {
+		log.Println("log flooding test: logging current time: " + time.Now().String())
+	}
 }
