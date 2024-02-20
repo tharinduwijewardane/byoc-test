@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	stopAt := time.Now().Add(10 * time.Minute)
+	stopAt := time.Now().Add(4 * time.Minute)
 	for {
 		log.Println("log flooding test: logging current time: " + time.Now().String())
 		if time.Now().After(stopAt) {
