@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 func main() {
 
-	stopAt := time.Now().Add(4 * time.Minute)
-	for {
-		log.Println("log flooding test: logging current time: " + time.Now().String())
-		if time.Now().After(stopAt) {
-			break
+	go func() {
+		for i := 0; i < 1000000; i++ {
+			log.Println("log with sleep test: " + strconv.Itoa(i))
+			time.Sleep(100 * time.Millisecond)
 		}
-	}
+	}()
 
 	httpPort := 9090
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
