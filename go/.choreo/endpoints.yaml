@@ -5,7 +5,7 @@ endpoints:
   # +required Unique name for the endpoint. (This name will be used when generating the managed API)
   - name: My ep 1
     # +required Numeric port value that gets exposed via this endpoint
-    port: 9090
+    port: 9091
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC
     type: REST
@@ -21,7 +21,7 @@ endpoints:
     schemaFilePath: openapi.yaml
   - name: My ep 2
     # +required Numeric port value that gets exposed via this endpoint
-    port: 9091
+    port: 9092
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC, UDP, TCP
     type: REST
@@ -34,4 +34,20 @@ endpoints:
     # +optional Path to the schema definition file. Defaults to wild card route if not provided
     # This is only applicable to REST endpoint types.
     # The path should be relative to the docker context.
-    schemaFilePath: openapi.yaml
+    schemaFilePath: openapi2.yaml
+  - name: My ep 3
+    # +required Numeric port value that gets exposed via this endpoint
+    port: 9093
+    # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
+    # Allowed values: REST, GraphQL, GRPC, UDP, TCP
+    type: REST
+    # +optional Network level visibility of this endpoint. Defaults to Public
+    # Accepted values: Project|Organization|Public.
+    networkVisibility: Project
+    # +optional Context (base path) of the API that is exposed via this endpoint.
+    # This is mandatory if the endpoint type is set to REST or GraphQL.
+    context: /
+    # +optional Path to the schema definition file. Defaults to wild card route if not provided
+    # This is only applicable to REST endpoint types.
+    # The path should be relative to the docker context.
+    schemaFilePath: openapi3.yaml

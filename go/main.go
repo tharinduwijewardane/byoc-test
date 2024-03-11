@@ -17,30 +17,43 @@ import (
 func main() {
 	fmt.Println("Starting server")
 
-	helloMux := http.NewServeMux()
-	helloMux.HandleFunc("/", ping)
-	helloMux.HandleFunc("/hello", hello)
-	helloMux.HandleFunc("/healthz", healthz)
-	helloMux.HandleFunc("/proxy", proxy)
+	mux1 := http.NewServeMux()
+	mux1.HandleFunc("/", ping)
+	mux1.HandleFunc("/hello", hello)
+	mux1.HandleFunc("/healthz", healthz)
+	mux1.HandleFunc("/proxy", proxy)
 
-	helloSrv := &http.Server{
-		Addr:         "127.0.0.1:9090",
-		WriteTimeout: 10 * time.Second,
-		ReadTimeout:  10 * time.Second,
-		Handler:      middleware{helloMux},
-	}
-
-	adminMux := http.NewServeMux()
-	adminMux.HandleFunc("/", ping)
-	adminMux.HandleFunc("/hello", hello)
-	adminMux.HandleFunc("/healthz", healthz)
-	adminMux.HandleFunc("/proxy", proxy)
-
-	adminSrv := &http.Server{
+	srv1 := &http.Server{
 		Addr:         "127.0.0.1:9091",
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
-		Handler:      middleware{adminMux},
+		Handler:      middleware{mux1},
+	}
+
+	mux2 := http.NewServeMux()
+	mux2.HandleFunc("/", ping)
+	mux2.HandleFunc("/hello", hello)
+	mux2.HandleFunc("/healthz", healthz)
+	mux2.HandleFunc("/proxy", proxy)
+
+	srv2 := &http.Server{
+		Addr:         "127.0.0.1:9092",
+		WriteTimeout: 10 * time.Second,
+		ReadTimeout:  10 * time.Second,
+		Handler:      middleware{mux2},
+	}
+
+	mux3 := http.NewServeMux()
+	mux3.HandleFunc("/", ping)
+	mux3.HandleFunc("/hello", hello)
+	mux3.HandleFunc("/healthz", healthz)
+	mux3.HandleFunc("/proxy", proxy)
+
+	srv3 := &http.Server{
+		Addr:         "127.0.0.1:9093",
+		WriteTimeout: 10 * time.Second,
+		ReadTimeout:  10 * time.Second,
+		Handler:      middleware{mux3},
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -48,19 +61,26 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT)
 
 	go func() {
-		helloSrv.ListenAndServe()
+		srv1.ListenAndServe()
 	}()
 
 	go func() {
-		adminSrv.ListenAndServe()
+		srv2.ListenAndServe()
+	}()
+
+	go func() {
+		srv3.ListenAndServe()
 	}()
 
 	defer func() {
-		if err := helloSrv.Shutdown(ctx); err != nil {
-			fmt.Println("error when shutting down the main server: ", err)
+		if err := srv1.Shutdown(ctx); err != nil {
+			fmt.Println("error when shutting down the srv1 server: ", err)
 		}
-		if err := adminSrv.Shutdown(ctx); err != nil {
-			fmt.Println("error when shutting down the admin server: ", err)
+		if err := srv2.Shutdown(ctx); err != nil {
+			fmt.Println("error when shutting down the srv2 server: ", err)
+		}
+		if err := srv3.Shutdown(ctx); err != nil {
+			fmt.Println("error when shutting down the srv3 server: ", err)
 		}
 	}()
 
