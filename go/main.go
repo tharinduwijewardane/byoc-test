@@ -160,6 +160,14 @@ func (m middleware) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	ctx = context.WithValue(ctx, "__requestStartTimer__", time.Now())
 	req = req.WithContext(ctx)
 
+	log.Printf("Method: %s, URL: %s\n", req.Method, req.URL.Path)
+	log.Println("Request Headers:")
+	for name, values := range req.Header {
+		for _, value := range values {
+			log.Printf("%s: %s\n", name, value)
+		}
+	}
+
 	m.mux.ServeHTTP(rw, req)
 
 	start := req.Context().Value("__requestStartTimer__").(time.Time)
