@@ -70,7 +70,14 @@ func main() {
 
 func logRequest(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
+		log.Printf("RemoteAddr:%s Method:%s URL:%s\n", r.RemoteAddr, r.Method, r.URL)
+		log.Println("Request Headers:")
+		for name, values := range r.Header {
+			for _, value := range values {
+				log.Printf("%s: %s\n", name, value)
+			}
+		}
+		log.Println("--------------------")
 		handler.ServeHTTP(w, r)
 	})
 }
