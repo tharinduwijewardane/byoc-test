@@ -12,6 +12,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/
 
 FROM alpine
 
+RUN apk --no-cache add ca-certificates && apk --no-cache add curl
 COPY --from=build-env /go/bin/app /go/bin/app
 USER 10014
 
