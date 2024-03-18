@@ -57,11 +57,13 @@ func main() {
 			if err != nil {
 				w.Write([]byte(err.Error()))
 				w.WriteHeader(http.StatusInternalServerError)
+				return
 			}
 			body, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
 				w.Write([]byte(err.Error()))
 				w.WriteHeader(http.StatusInternalServerError)
+				return
 			}
 			w.Write(body)
 			return
