@@ -55,12 +55,14 @@ func main() {
 
 			resp, err := http.Get(fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(path, "/")))
 			if err != nil {
+				fmt.Println(err.Error())
 				w.Write([]byte(err.Error()))
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			body, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
+				fmt.Println(err.Error())
 				w.Write([]byte(err.Error()))
 				w.WriteHeader(http.StatusInternalServerError)
 				return
