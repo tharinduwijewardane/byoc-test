@@ -19,10 +19,11 @@ func main() {
 
 	mux1 := http.NewServeMux()
 	mux1.HandleFunc("/", ping)
-	mux1.HandleFunc("/five", five)
 	mux1.HandleFunc("/hello", hello)
 	mux1.HandleFunc("/healthz", healthz)
 	mux1.HandleFunc("/proxy", proxy)
+	mux1.HandleFunc("/five", five)
+	mux1.HandleFunc("/pp{myParam}/five", ppMyParamFive)
 
 	srv1 := &http.Server{
 		Addr:         ":9091",
@@ -33,10 +34,11 @@ func main() {
 
 	mux2 := http.NewServeMux()
 	mux2.HandleFunc("/", ping)
-	mux2.HandleFunc("/five", five)
 	mux2.HandleFunc("/hello", hello)
 	mux2.HandleFunc("/healthz", healthz)
 	mux2.HandleFunc("/proxy", proxy)
+	mux2.HandleFunc("/five", five)
+	mux2.HandleFunc("/pp{myParam}/five", ppMyParamFive)
 
 	srv2 := &http.Server{
 		Addr:         ":9092",
@@ -47,10 +49,11 @@ func main() {
 
 	mux3 := http.NewServeMux()
 	mux3.HandleFunc("/", ping)
-	mux3.HandleFunc("/five", five)
 	mux3.HandleFunc("/hello", hello)
 	mux3.HandleFunc("/healthz", healthz)
 	mux3.HandleFunc("/proxy", proxy)
+	mux3.HandleFunc("/five", five)
+	mux3.HandleFunc("/pp{myParam}/five", ppMyParamFive)
 
 	srv3 := &http.Server{
 		Addr:         ":9093",
@@ -101,13 +104,6 @@ func ping(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "{\"active\": true}")
 }
 
-func five(w http.ResponseWriter, req *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	w.WriteHeader(http.StatusInternalServerError)
-	fmt.Fprintf(w, "{\"stauts\": 500}")
-}
-
 func healthz(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -152,6 +148,21 @@ func proxy(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func five(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	w.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintf(w, "{\"stauts\": 500}")
+}
+
+func ppMyParamFive(w http.ResponseWriter, req *http.Request) {
+	urlPath := req.URL.Path
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintf(w, "{\"stauts\": 500, path: %s}", urlPath)
 }
 
 func logRequest(handler http.Handler) http.Handler {

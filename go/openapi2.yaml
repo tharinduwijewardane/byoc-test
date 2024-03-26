@@ -94,9 +94,29 @@ paths:
               schema:
                 type: object
                 properties:
-                  healthy:
-                    type: boolean
+                  status:
+                    type: string
               examples:
                 '0':
                   value: |
                     {"status":500}
+  /pp/{myParam}/five:
+    get:
+      summary: Get comments for an article
+      parameters:
+        - in: path
+          name: myParam
+          schema:
+            type: string
+          required: true
+          description: The ID of the article
+      responses:
+        '500':
+          description: simulating 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
