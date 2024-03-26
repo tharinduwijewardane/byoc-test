@@ -31,7 +31,7 @@ paths:
             text/html; charset=utf-8:
               schema:
                 type: string
-              examples: {}
+              examples: { }
   /healthz/:
     get:
       description: Auto generated using Swagger Inspector
@@ -82,4 +82,21 @@ paths:
             text/html; charset=utf-8:
               schema:
                 type: string
-              examples: {}
+              examples: { }
+  /five:
+    get:
+      description: get 500
+      responses:
+        '500':
+          description: simulating 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  healthy:
+                    type: boolean
+              examples:
+                '0':
+                  value: |
+                    {"status":500}

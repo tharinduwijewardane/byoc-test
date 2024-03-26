@@ -105,6 +105,7 @@ func five(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintf(w, "{\"stauts\": 500}")
 }
 
 func healthz(w http.ResponseWriter, req *http.Request) {
