@@ -19,12 +19,13 @@ func main() {
 
 	mux1 := http.NewServeMux()
 	mux1.HandleFunc("/", ping)
+	mux1.HandleFunc("/five", five)
 	mux1.HandleFunc("/hello", hello)
 	mux1.HandleFunc("/healthz", healthz)
 	mux1.HandleFunc("/proxy", proxy)
 
 	srv1 := &http.Server{
-		Addr:         "127.0.0.1:9091",
+		Addr:         ":9091",
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		Handler:      middleware{mux1},
@@ -32,12 +33,13 @@ func main() {
 
 	mux2 := http.NewServeMux()
 	mux2.HandleFunc("/", ping)
+	mux2.HandleFunc("/five", five)
 	mux2.HandleFunc("/hello", hello)
 	mux2.HandleFunc("/healthz", healthz)
 	mux2.HandleFunc("/proxy", proxy)
 
 	srv2 := &http.Server{
-		Addr:         "127.0.0.1:9092",
+		Addr:         ":9092",
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		Handler:      middleware{mux2},
@@ -45,12 +47,13 @@ func main() {
 
 	mux3 := http.NewServeMux()
 	mux3.HandleFunc("/", ping)
+	mux3.HandleFunc("/five", five)
 	mux3.HandleFunc("/hello", hello)
 	mux3.HandleFunc("/healthz", healthz)
 	mux3.HandleFunc("/proxy", proxy)
 
 	srv3 := &http.Server{
-		Addr:         "127.0.0.1:9093",
+		Addr:         ":9093",
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		Handler:      middleware{mux3},
@@ -96,6 +99,12 @@ func ping(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	fmt.Fprintf(w, "{\"active\": true}")
+}
+
+func five(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	w.WriteHeader(http.StatusInternalServerError)
 }
 
 func healthz(w http.ResponseWriter, req *http.Request) {
