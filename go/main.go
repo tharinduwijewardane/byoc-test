@@ -23,7 +23,7 @@ func main() {
 	mux1.HandleFunc("/healthz", healthz)
 	mux1.HandleFunc("/proxy", proxy)
 	mux1.HandleFunc("/five", five)
-	mux1.HandleFunc("/pp/:myParam/five", ppMyParamFive)
+	mux1.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
 
 	srv1 := &http.Server{
 		Addr:         ":9091",
@@ -38,7 +38,7 @@ func main() {
 	mux2.HandleFunc("/healthz", healthz)
 	mux2.HandleFunc("/proxy", proxy)
 	mux2.HandleFunc("/five", five)
-	mux2.HandleFunc("/pp/:myParam/five", ppMyParamFive)
+	mux2.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
 
 	srv2 := &http.Server{
 		Addr:         ":9092",
@@ -53,7 +53,7 @@ func main() {
 	mux3.HandleFunc("/healthz", healthz)
 	mux3.HandleFunc("/proxy", proxy)
 	mux3.HandleFunc("/five", five)
-	mux3.HandleFunc("/pp/:myParam/five", ppMyParamFive)
+	mux3.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
 
 	srv3 := &http.Server{
 		Addr:         ":9093",
