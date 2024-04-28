@@ -182,12 +182,13 @@ func (m middleware) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	req = req.WithContext(ctx)
 
 	log.Printf("Method: %s, URL: %s\n", req.Method, req.URL.Path)
-	log.Println("Request Headers:")
+	headers := ""
 	for name, values := range req.Header {
 		for _, value := range values {
-			log.Printf("%s: %s\n", name, value)
+			headers += fmt.Sprintf("%s: %s\t", name, value)
 		}
 	}
+	log.Println("Request Headers: ", headers)
 
 	m.mux.ServeHTTP(rw, req)
 
