@@ -17,6 +17,21 @@ import (
 func main() {
 	fmt.Println("Starting server")
 
+	mux0 := http.NewServeMux()
+	mux0.HandleFunc("/", ping)
+	mux0.HandleFunc("/hello", hello)
+	mux0.HandleFunc("/healthz", healthz)
+	mux0.HandleFunc("/proxy", proxy)
+	mux0.HandleFunc("/five", five)
+	mux0.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
+
+	srv0 := &http.Server{
+		Addr:         ":9090",
+		WriteTimeout: 10 * time.Second,
+		ReadTimeout:  10 * time.Second,
+		Handler:      middleware{mux0},
+	}
+
 	mux1 := http.NewServeMux()
 	mux1.HandleFunc("/", ping)
 	mux1.HandleFunc("/hello", hello)
@@ -67,6 +82,10 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT)
 
 	go func() {
+		srv0.ListenAndServe()
+	}()
+
+	go func() {
 		srv1.ListenAndServe()
 	}()
 
@@ -79,6 +98,9 @@ func main() {
 	}()
 
 	defer func() {
+		if err := srv0.Shutdown(ctx); err != nil {
+			fmt.Println("error when shutting down the srv0 server: ", err)
+		}
 		if err := srv1.Shutdown(ctx); err != nil {
 			fmt.Println("error when shutting down the srv1 server: ", err)
 		}
