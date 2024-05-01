@@ -23,6 +23,7 @@ func main() {
 	mux0.HandleFunc("/healthz", healthz)
 	mux0.HandleFunc("/proxy", proxy)
 	mux0.HandleFunc("/five", five)
+	mux0.HandleFunc("/four09", four09)
 	mux0.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
 
 	srv0 := &http.Server{
@@ -38,6 +39,7 @@ func main() {
 	mux1.HandleFunc("/healthz", healthz)
 	mux1.HandleFunc("/proxy", proxy)
 	mux1.HandleFunc("/five", five)
+	mux1.HandleFunc("/four09", four09)
 	mux1.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
 
 	srv1 := &http.Server{
@@ -53,6 +55,7 @@ func main() {
 	mux2.HandleFunc("/healthz", healthz)
 	mux2.HandleFunc("/proxy", proxy)
 	mux2.HandleFunc("/five", five)
+	mux2.HandleFunc("/four09", four09)
 	mux2.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
 
 	srv2 := &http.Server{
@@ -60,21 +63,6 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		Handler:      middleware{mux2},
-	}
-
-	mux3 := http.NewServeMux()
-	mux3.HandleFunc("/", ping)
-	mux3.HandleFunc("/hello", hello)
-	mux3.HandleFunc("/healthz", healthz)
-	mux3.HandleFunc("/proxy", proxy)
-	mux3.HandleFunc("/five", five)
-	mux3.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
-
-	srv3 := &http.Server{
-		Addr:         ":9093",
-		WriteTimeout: 10 * time.Second,
-		ReadTimeout:  10 * time.Second,
-		Handler:      middleware{mux3},
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -93,10 +81,6 @@ func main() {
 		srv2.ListenAndServe()
 	}()
 
-	go func() {
-		srv3.ListenAndServe()
-	}()
-
 	defer func() {
 		if err := srv0.Shutdown(ctx); err != nil {
 			fmt.Println("error when shutting down the srv0 server: ", err)
@@ -106,9 +90,6 @@ func main() {
 		}
 		if err := srv2.Shutdown(ctx); err != nil {
 			fmt.Println("error when shutting down the srv2 server: ", err)
-		}
-		if err := srv3.Shutdown(ctx); err != nil {
-			fmt.Println("error when shutting down the srv3 server: ", err)
 		}
 	}()
 
@@ -177,6 +158,13 @@ func five(w http.ResponseWriter, req *http.Request) {
 
 	w.WriteHeader(http.StatusInternalServerError)
 	fmt.Fprintf(w, "{\"stauts\": 500}")
+}
+
+func four09(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	w.WriteHeader(http.StatusConflict)
+	fmt.Fprintf(w, "{\"stauts\": 409}")
 }
 
 func ppMyParamFive(w http.ResponseWriter, req *http.Request) {
