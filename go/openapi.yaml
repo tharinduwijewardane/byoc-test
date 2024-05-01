@@ -100,6 +100,23 @@ paths:
                 '0':
                   value: |
                     {"status":500}
+  /four09:
+    get:
+      description: get 409
+      responses:
+        '500':
+          description: simulating 409
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+              examples:
+                '0':
+                  value: |
+                    {"status":409}
   /pp/{myParam}/five:
     get:
       summary: Get comments for an article
