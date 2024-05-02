@@ -24,6 +24,16 @@ func main() {
 	http.HandleFunc("/hello/", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "Hello %s", req.URL.Query().Get("name"))
 	})
+	http.HandleFunc("/five", func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "{\"stauts\": 500}")
+	})
+	http.HandleFunc("/four09", func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusConflict)
+		fmt.Fprintf(w, "{\"stauts\": 409}")
+	})
 	http.HandleFunc("/proxy/", func(w http.ResponseWriter, req *http.Request) {
 		if req.Method == http.MethodPost {
 			decoder := json.NewDecoder(req.Body)
