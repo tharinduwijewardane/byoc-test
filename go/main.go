@@ -104,7 +104,11 @@ func main() {
 func ping(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Fprintf(w, "{\"active\": true}")
+	m := map[string]string{
+		"active": "true",
+		"port":   req.Header.Get("port"),
+	}
+	_ = json.NewEncoder(w).Encode(m)
 }
 
 func healthz(w http.ResponseWriter, req *http.Request) {
@@ -157,14 +161,22 @@ func five(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusInternalServerError)
-	fmt.Fprintf(w, "{\"stauts\": 500}")
+	m := map[string]string{
+		"status": "500",
+		"port":   req.Header.Get("port"),
+	}
+	_ = json.NewEncoder(w).Encode(m)
 }
 
 func four09(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusConflict)
-	fmt.Fprintf(w, "{\"stauts\": 409}")
+	m := map[string]string{
+		"status": "409",
+		"port":   req.Header.Get("port"),
+	}
+	_ = json.NewEncoder(w).Encode(m)
 }
 
 func ppMyParamFive(w http.ResponseWriter, req *http.Request) {
@@ -193,6 +205,7 @@ func (m middleware) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	req = req.WithContext(ctx)
 
 	log.Printf("EP: %s Method: %s, URL: %s\n", m.epName, req.Method, req.URL.Path)
+	req.Header.Set("port", m.epName)
 	headers := ""
 	for name, values := range req.Header {
 		for _, value := range values {
