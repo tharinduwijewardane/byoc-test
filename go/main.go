@@ -30,7 +30,7 @@ func main() {
 		Addr:         ":9090",
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
-		Handler:      middleware{mux0},
+		Handler:      middleware{mux0, "9090"},
 	}
 
 	mux1 := http.NewServeMux()
@@ -46,7 +46,7 @@ func main() {
 		Addr:         ":9091",
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
-		Handler:      middleware{mux1},
+		Handler:      middleware{mux1, "9091"},
 	}
 
 	mux2 := http.NewServeMux()
@@ -62,7 +62,7 @@ func main() {
 		Addr:         ":9092",
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
-		Handler:      middleware{mux2},
+		Handler:      middleware{mux2, "9092"},
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -183,7 +183,8 @@ func logRequest(handler http.Handler) http.Handler {
 }
 
 type middleware struct {
-	mux http.Handler
+	mux    http.Handler
+	epName string
 }
 
 func (m middleware) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
@@ -191,7 +192,7 @@ func (m middleware) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	ctx = context.WithValue(ctx, "__requestStartTimer__", time.Now())
 	req = req.WithContext(ctx)
 
-	log.Printf("Method: %s, URL: %s\n", req.Method, req.URL.Path)
+	log.Printf("EP: %s Method: %s, URL: %s\n", m.epName, req.Method, req.URL.Path)
 	headers := ""
 	for name, values := range req.Header {
 		for _, value := range values {
