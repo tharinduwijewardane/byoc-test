@@ -137,3 +137,57 @@ paths:
                 properties:
                   status:
                     type: string
+  /callOther:
+    get:
+      summary: Call an external service and forward the response.
+      description: |
+        This endpoint calls an external service specified by the `url` query parameter and forwards the response back to the client. 
+        Optionally, an additional header can be added to the request using the `name` and `value` query parameters.
+      parameters:
+        - in: query
+          name: url
+          required: true
+          schema:
+            type: string
+          description: The URL of the external service to call.
+        - in: query
+          name: name
+          required: false
+          schema:
+            type: string
+          description: The name of the additional header to add to the request.
+        - in: query
+          name: value
+          required: false
+          schema:
+            type: string
+          description: The value of the additional header to add to the request.
+      responses:
+        '200':
+          description: The response from the external service.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: '{"message": "Success"}'
+        '400':
+          description: Missing 'url' query parameter.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Missing 'url' query parameter"
+        '502':
+          description: Failed to reach external service.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Failed to reach external service"
+        '500':
+          description: Failed to create request or read response from external service.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Failed to create request"

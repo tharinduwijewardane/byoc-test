@@ -25,6 +25,7 @@ func main() {
 	mux0.HandleFunc("/five", five)
 	mux0.HandleFunc("/four09", four09)
 	mux0.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
+	mux0.HandleFunc("/callOther", callOther)
 
 	srv0 := &http.Server{
 		Addr:         ":9090",
@@ -41,6 +42,7 @@ func main() {
 	mux1.HandleFunc("/five", five)
 	mux1.HandleFunc("/four09", four09)
 	mux1.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
+	mux1.HandleFunc("/callOther", callOther)
 
 	srv1 := &http.Server{
 		Addr:         ":9091",
@@ -57,6 +59,7 @@ func main() {
 	mux2.HandleFunc("/five", five)
 	mux2.HandleFunc("/four09", four09)
 	mux2.HandleFunc("/pp/{myParam}/five", ppMyParamFive)
+	mux2.HandleFunc("/callOther", callOther)
 
 	srv2 := &http.Server{
 		Addr:         ":9092",
@@ -185,6 +188,55 @@ func ppMyParamFive(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
 	fmt.Fprintf(w, "{\"stauts\": 500, \"path\": \"%s\"}", urlPath)
+}
+
+func callOther(w http.ResponseWriter, r *http.Request) {
+	externalServiceURL := r.URL.Query().Get("url")
+	extraHeaderName := r.URL.Query().Get("name")
+	extraHeaderValue := r.URL.Query().Get("value")
+	if externalServiceURL == "" {
+		http.Error(w, "Missing 'url' query parameter", http.StatusBadRequest)
+		return
+	}
+
+	// Create an HTTP client with a timeout
+	client := &http.Client{
+		Timeout: 240 * time.Second,
+	}
+
+	// Create a new HTTP GET request
+	req, err := http.NewRequest("GET", externalServiceURL, nil)
+	if err != nil {
+		http.Error(w, "Failed to create request", http.StatusInternalServerError)
+		return
+	}
+
+	// Forward the headers from the original request (optional)
+	req.Header = r.Header
+
+	req.Header.Set(extraHeaderName, extraHeaderValue)
+
+	// Send the request to the external service
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Failed to reach external service", http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Failed to read response from external service", http.StatusInternalServerError)
+		return
+	}
+
+	// Forward the response from the external service to the client
+	for k, v := range resp.Header {
+		w.Header()[k] = v
+	}
+	w.WriteHeader(resp.StatusCode)
+	w.Write(body)
 }
 
 func logRequest(handler http.Handler) http.Handler {
