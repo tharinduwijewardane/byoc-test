@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"strings"
@@ -191,7 +192,12 @@ func ppMyParamFive(w http.ResponseWriter, req *http.Request) {
 }
 
 func callOther(w http.ResponseWriter, r *http.Request) {
-	externalServiceURL := r.URL.Query().Get("url")
+	externalServiceURL, err := url.QueryUnescape(r.URL.Query().Get("url"))
+	log.Printf("externalServiceURL: %s\n", externalServiceURL)
+	if err != nil {
+		http.Error(w, "Failed to unescape URL", http.StatusBadRequest)
+		return
+	}
 	extraHeaderName := r.URL.Query().Get("name")
 	extraHeaderValue := r.URL.Query().Get("value")
 	if externalServiceURL == "" {
