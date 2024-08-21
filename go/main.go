@@ -220,7 +220,9 @@ func callOther(w http.ResponseWriter, r *http.Request) {
 	// Forward the headers from the original request (optional)
 	req.Header = r.Header
 
-	req.Header.Set(extraHeaderName, extraHeaderValue)
+	if extraHeaderName != "" && extraHeaderValue != "" {
+		req.Header.Set(extraHeaderName, extraHeaderValue)
+	}
 
 	// Send the request to the external service
 	resp, err := client.Do(req)
