@@ -225,6 +225,7 @@ func callOther(w http.ResponseWriter, r *http.Request) {
 	// Send the request to the external service
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Printf("Failed to reach external service: %s\n", err)
 		http.Error(w, "Failed to reach external service", http.StatusBadGateway)
 		return
 	}
