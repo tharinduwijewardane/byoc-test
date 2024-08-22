@@ -30,8 +30,8 @@ func main() {
 
 	srv0 := &http.Server{
 		Addr:         ":9090",
-		WriteTimeout: 10 * time.Second,
-		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 240 * time.Second,
+		ReadTimeout:  240 * time.Second,
 		Handler:      middleware{mux0, "9090"},
 	}
 
@@ -47,8 +47,8 @@ func main() {
 
 	srv1 := &http.Server{
 		Addr:         ":9091",
-		WriteTimeout: 10 * time.Second,
-		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 240 * time.Second,
+		ReadTimeout:  240 * time.Second,
 		Handler:      middleware{mux1, "9091"},
 	}
 
@@ -64,8 +64,8 @@ func main() {
 
 	srv2 := &http.Server{
 		Addr:         ":9092",
-		WriteTimeout: 10 * time.Second,
-		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 240 * time.Second,
+		ReadTimeout:  240 * time.Second,
 		Handler:      middleware{mux2, "9092"},
 	}
 
