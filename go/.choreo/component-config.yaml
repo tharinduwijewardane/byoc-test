@@ -1,0 +1,69 @@
+apiVersion: core.choreo.dev/v1beta1
+kind: ComponentConfig
+spec:
+  # +optional Incoming connection details for the component (AKA endpoints).
+  inbound:
+    # +required Unique name for the endpoint. (This name will be used when generating the managed API)
+    - name: My ep 0
+      # +required Numeric port value that gets exposed via this endpoint
+      port: 9090
+      # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
+      # Allowed values: REST, GraphQL, GRPC
+      type: REST
+      # +optional Network level visibility of this endpoint. Defaults to Project
+      # Accepted values: Project|Organization|Public.
+      networkVisibility: Public
+      # +optional Context (base path) of the API that is exposed via this endpoint.
+      # This is mandatory if the endpoint type is set to REST or GraphQL.
+      context: /
+      # +optional Path to the schema definition file. Defaults to wild card route if not provided
+      # This is only applicable to REST endpoint types.
+      # The path should be relative to the docker context.
+      schemaFilePath: openapi.yaml
+    # +required Unique name for the endpoint. (This name will be used when generating the managed API)
+    - name: My ep 1
+      # +required Numeric port value that gets exposed via this endpoint
+      port: 9091
+      # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
+      # Allowed values: REST, GraphQL, GRPC
+      type: REST
+      # +optional Network level visibility of this endpoint. Defaults to Project
+      # Accepted values: Project|Organization|Public.
+      networkVisibility: Public
+      # +optional Context (base path) of the API that is exposed via this endpoint.
+      # This is mandatory if the endpoint type is set to REST or GraphQL.
+      context: /
+      # +optional Path to the schema definition file. Defaults to wild card route if not provided
+      # This is only applicable to REST endpoint types.
+      # The path should be relative to the docker context.
+      schemaFilePath: openapi.yaml
+    - name: My ep 2
+      # +required Numeric port value that gets exposed via this endpoint
+      port: 9092
+      # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
+      # Allowed values: REST, GraphQL, GRPC, UDP, TCP
+      type: REST
+      # +optional Network level visibility of this endpoint. Defaults to Public
+      # Accepted values: Project|Organization|Public.
+      networkVisibility: Organization
+      # +optional Context (base path) of the API that is exposed via this endpoint.
+      # This is mandatory if the endpoint type is set to REST or GraphQL.
+      context: /
+      # +optional Path to the schema definition file. Defaults to wild card route if not provided
+      # This is only applicable to REST endpoint types.
+      # The path should be relative to the docker context.
+      schemaFilePath: openapi2.yaml
+  # +optional Outgoing connection details for the component.
+#  outbound:
+#    # +optional Defines the service references from the Internal Marketplace.
+#    serviceReferences:
+#      # +required Name of the service reference.
+#      - name: choreo:///apifirst/mttm/mmvhxd/ad088/v1.0/PUBLIC
+#        # +required Name of the connection instance.
+#        connectionConfig: 19d2648b-d29c-4452-afdd-1b9311e81412
+#        # +optional Environment variables injected to the component for connection configuration.
+#        env:
+#          # +required Key name of the connection configuration.
+#          - from: ServiceURL
+#            # +required Environment variable injected to the container.
+#            to: SERVICE_URL
