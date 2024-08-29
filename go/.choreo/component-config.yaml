@@ -54,16 +54,24 @@ spec:
       # The path should be relative to the docker context.
       schemaFilePath: openapi2.yaml
   # +optional Outgoing connection details for the component.
-#  outbound:
-#    # +optional Defines the service references from the Internal Marketplace.
-#    serviceReferences:
-#      # +required Name of the service reference.
-#      - name: choreo:///apifirst/mttm/mmvhxd/ad088/v1.0/PUBLIC
-#        # +required Name of the connection instance.
-#        connectionConfig: 19d2648b-d29c-4452-afdd-1b9311e81412
-#        # +optional Environment variables injected to the component for connection configuration.
-#        env:
-#          # +required Key name of the connection configuration.
-#          - from: ServiceURL
-#            # +required Environment variable injected to the container.
-#            to: SERVICE_URL
+  outbound:
+    # +optional Defines the service references from the Internal Marketplace.
+    serviceReferences:
+      # +required Name of the service reference.
+      - name: choreo:///tharinduwijewardane/proj-2024/aug13-4-oneep/803f0/v1/PUBLIC
+        # +required Name of the connection instance.
+        connectionConfig: 01ef6524-c334-17e6-bfd2-9232206204bf
+        # +optional Environment variables injected to the component for connection configuration.
+        env:
+          # +required Key name of the connection configuration.
+          - from: ServiceURL
+            # +required Environment variable injected to the container.
+            to: SERVICE_URL
+          - from: ConsumerKey
+            to: CONSUMER_KEY
+          - from: ConsumerSecret
+            to: CONSUMER_SECRET
+          - from: TokenURL
+            to: TOKEN_URL
+          - from: APIKey
+            to: API_KEY
