@@ -29,7 +29,7 @@ spec:
       type: REST
       # +optional Network level visibility of this endpoint. Defaults to Project
       # Accepted values: Project|Organization|Public.
-      networkVisibility: Public
+      networkVisibility: Project
       # +optional Context (base path) of the API that is exposed via this endpoint.
       # This is mandatory if the endpoint type is set to REST or GraphQL.
       context: /
@@ -54,24 +54,24 @@ spec:
       # The path should be relative to the docker context.
       schemaFilePath: openapi2.yaml
   # +optional Outgoing connection details for the component.
-  outbound:
-    # +optional Defines the service references from the Internal Marketplace.
-    serviceReferences:
-      # +required Name of the service reference.
-      - name: choreo:///tharinduwijewardane/proj-2024/aug13-4-oneep/803f0/v1/PUBLIC
-        # +required Name of the connection instance.
-        connectionConfig: 01ef6524-c334-17e6-bfd2-9232206204bf
-        # +optional Environment variables injected to the component for connection configuration.
-        env:
-          # +required Key name of the connection configuration.
-          - from: ServiceURL
-            # +required Environment variable injected to the container.
-            to: SERVICE_URL
-          - from: ConsumerKey
-            to: CONSUMER_KEY
-          - from: ConsumerSecret
-            to: CONSUMER_SECRET
-          - from: TokenURL
-            to: TOKEN_URL
-          - from: APIKey
-            to: API_KEY
+#  outbound:
+#    # +optional Defines the service references from the Internal Marketplace.
+#    serviceReferences:
+#      # +required Name of the service reference.
+#      - name: choreo:///tharinduwijewardane/proj-2024/aug13-4-oneep/803f0/v1/PUBLIC
+#        # +required Name of the connection instance.
+#        connectionConfig: //todo
+#        # +optional Environment variables injected to the component for connection configuration.
+#        env:
+#          # +required Key name of the connection configuration.
+#          - from: ServiceURL
+#            # +required Environment variable injected to the container.
+#            to: SERVICE_URL
+#          - from: ConsumerKey
+#            to: CONSUMER_KEY
+#          - from: ConsumerSecret
+#            to: CONSUMER_SECRET
+#          - from: TokenURL
+#            to: TOKEN_URL
+#          - from: APIKey
+#            to: API_KEY
