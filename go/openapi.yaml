@@ -1,26 +1,39 @@
 openapi: 3.0.0
 info:
-  title: Inventory Service API
+  title: Order Service API
   version: 1.0.0
 paths:
-  /check_inventory/{productId}:
-    get:
-      summary: Check inventory for a product
-      parameters:
-        - name: productId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The ID of the product to check inventory for
+  /place_order:
+    post:
+      summary: Place an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                  example: "12345"
+                quantity:
+                  type: integer
+                  example: 1
       responses:
         '200':
-          description: Inventory check response
+          description: Order response
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  in_stock:
+                  success:
                     type: boolean
-                    description: Indicates if the product is in stock
+                    example: true
+                  message:
+                    type: string
+                    example: "Order placed successfully"
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Failed to check inventory

@@ -1,0 +1,44 @@
+apiVersion: core.choreo.dev/v1beta1
+kind: ComponentConfig
+spec:
+  # +optional Incoming connection details for the component (AKA endpoints).
+  inbound:
+    # +required Unique name for the endpoint. (This name will be used when generating the managed API)
+    - name: ep 0
+      # +required Numeric port value that gets exposed via this endpoint
+      port: 9090
+      # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
+      # Allowed values: REST, GraphQL, GRPC
+      type: REST
+      # +optional Network level visibility of this endpoint. Defaults to Project
+      # Accepted values: Project|Organization|Public.
+      networkVisibility: Public
+      # +optional Context (base path) of the API that is exposed via this endpoint.
+      # This is mandatory if the endpoint type is set to REST or GraphQL.
+      context: /
+      # +optional Path to the schema definition file. Defaults to wild card route if not provided
+      # This is only applicable to REST endpoint types.
+      # The path should be relative to the docker context.
+      schemaFilePath: openapi.yaml
+  # +optional Outgoing connection details for the component.
+  outbound:
+    # +optional Defines the service references from the Internal Marketplace.
+    serviceReferences:
+      # +required Name of the service reference.
+      - name: todo---choreo:///tharinduwijewardane/proj-2024-eu/oct2-1-oneep/803f0/v1/PUBLIC
+        # +required Name of the connection instance.
+        connectionConfig: todo---01ef8079-0e3c-1368-be13-187750bcc5cf
+        # +optional Environment variables injected to the component for connection configuration.
+        env:
+          # +required Key name of the connection configuration.
+          - from: ServiceURL
+            # +required Environment variable injected to the container.
+            to: INVENTORY_SERVICE_URL
+          - from: ConsumerKey
+            to: CONSUMER_KEY
+          - from: ConsumerSecret
+            to: CONSUMER_SECRET
+          - from: TokenURL
+            to: TOKEN_URL
+          - from: APIKey
+            to: INVENTORY_SERVICE_API_KEY
