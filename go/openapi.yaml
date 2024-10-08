@@ -1,119 +1,26 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
-  title: Choreo BYOC Examples
-  description: This repository contains demo API implemented in different frameworks to showcase capabilities of choreo.
-  version: '0.1'
+  title: Inventory Service API
+  version: 1.0.0
 paths:
-  /proxy/:
-    post:
-      description: Auto generated using Swagger Inspector
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                args:
-                  type: string
-                host:
-                  type: string
-            examples:
-              '0':
-                value: |-
-                  {
-                      "host": "http://postman-echo.com",
-                      "args": "get?foo1=bar1&foo2=bar2"
-                  }
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            text/html; charset=utf-8:
-              schema:
-                type: string
-              examples: { }
-  /healthz/:
+  /check_inventory/{productId}:
     get:
-      description: Auto generated using Swagger Inspector
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  healthy:
-                    type: boolean
-              examples:
-                '0':
-                  value: |
-                    {"healthy":true}
-  /:
-    get:
-      description: Auto generated using Swagger Inspector
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  healthy:
-                    type: boolean
-              examples:
-                '0':
-                  value: |
-                    {"active":true}
-  /hello/:
-    get:
-      description: Auto generated using Swagger Inspector
+      summary: Check inventory for a product
       parameters:
-        - name: name
-          in: query
+        - name: productId
+          in: path
+          required: true
           schema:
             type: string
-          example: world
+          description: The ID of the product to check inventory for
       responses:
         '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            text/html; charset=utf-8:
-              schema:
-                type: string
-              examples: { }
-  /five:
-    get:
-      description: get 500
-      responses:
-        '500':
-          description: simulating 500
+          description: Inventory check response
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-              examples:
-                '0':
-                  value: |
-                    {"status":500}
-  /four09:
-    get:
-      description: get 409
-      responses:
-        '500':
-          description: simulating 409
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-              examples:
-                '0':
-                  value: |
-                    {"status":409}
+                  in_stock:
+                    type: boolean
+                    description: Indicates if the product is in stock
