@@ -26,30 +26,39 @@ type InventoryResponse struct {
 }
 
 func placeOrder(w http.ResponseWriter, r *http.Request) {
+	log.Println("Received order request")
+
 	var order OrderRequest
 	err := json.NewDecoder(r.Body).Decode(&order)
 	if err != nil {
+		log.Printf("Error decoding request payload: %v", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
+	log.Printf("Order request decoded: ProductID=%s, Quantity=%d", order.ProductID, order.Quantity)
 
 	inventoryResponse, err := checkInventory(order.ProductID)
 	if err != nil {
+		log.Printf("Error checking inventory: %v", err)
 		http.Error(w, "Failed to check inventory", http.StatusInternalServerError)
 		return
 	}
+	log.Printf("Inventory check result: InStock=%v", inventoryResponse.InStock)
 
 	response := OrderResponse{Success: false}
 
 	if inventoryResponse.InStock {
 		response.Success = true
 		response.Message = "Order placed successfully"
+		log.Println("Order placed successfully")
 	} else {
 		response.Message = "Product is out of stock"
+		log.Println("Order failed: Product out of stock")
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+	log.Println("Order response sent")
 }
 
 func checkInventory(productID string) (InventoryResponse, error) {
@@ -91,6 +100,6 @@ func checkInventory(productID string) (InventoryResponse, error) {
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/place_order", placeOrder).Methods("POST")
-	fmt.Println("Order Service is running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	fmt.Println("Order Service is running on :9090")
+	log.Fatal(http.ListenAndServe(":9090", router))
 }
