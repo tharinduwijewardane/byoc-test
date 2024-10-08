@@ -21,20 +21,39 @@ type InventoryResponse struct {
 }
 
 func checkInventory(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Received request to check inventory")
+
 	vars := mux.Vars(r)
 	productID := vars["productId"]
+	log.Printf("Checking inventory for product ID: %s", productID)
 
 	response := InventoryResponse{InStock: false}
 
-	if quantity, exists := inventory[productID]; exists && quantity > 0 {
-		response.InStock = true
+	if quantity, exists := inventory[productID]; exists {
+		log.Printf("Product %s found in inventory. Quantity: %d", productID, quantity)
+		if quantity > 0 {
+			response.InStock = true
+			log.Printf("Product %s is in stock", productID)
+		} else {
+			log.Printf("Product %s is out of stock", productID)
+		}
+	} else {
+		log.Printf("Product %s not found in inventory", productID)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Printf("Error encoding JSON response: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	log.Printf("Response sent for product %s: %+v", productID, response)
 }
 
 func main() {
+	log.Println("Starting Inventory Service")
+
 	router := mux.NewRouter()
 
 	router.HandleFunc("/check_inventory/{productId}", checkInventory).Methods("GET")
