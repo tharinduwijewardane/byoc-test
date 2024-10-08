@@ -27,6 +27,13 @@ func checkInventory(w http.ResponseWriter, r *http.Request) {
 	productID := vars["productId"]
 	log.Printf("Checking inventory for product ID: %s", productID)
 
+	// Check if the product ID is "500" and return a 500 status code if true
+	if productID == "500" {
+		log.Printf("Product ID 500 requested, returning HTTP 500 status code")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 	response := InventoryResponse{InStock: false}
 
 	if quantity, exists := inventory[productID]; exists {
