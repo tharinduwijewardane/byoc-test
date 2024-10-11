@@ -41,12 +41,12 @@ spec:
 #            to: TOKEN_URL
 #          - from: APIKey
 #            to: INVENTORY_SERVICE_API_KEY
-outbound:
-  serviceReferences:
-    - name: choreo:///aiteam/vqet/oct9-inventory-svc/803f0/v1/PROJECT
-      connectionConfig: 01ef85e8-71cd-1e36-9c86-fc939e98afc8
-      env:
-        - from: ServiceURL
-          to: INVENTORY_SERVICE_URL
-        - from: APIKey
-          to: INVENTORY_SERVICE_API_KEY
+#outbound:
+#  serviceReferences:
+#    - name: choreo:///aiteam/vqet/oct9-inventory-svc/803f0/v1/PROJECT
+#      connectionConfig: 01ef85e8-71cd-1e36-9c86-fc939e98afc8
+#      env:
+#        - from: ServiceURL
+#          to: INVENTORY_SERVICE_URL
+#        - from: APIKey
+#          to: INVENTORY_SERVICE_API_KEY
