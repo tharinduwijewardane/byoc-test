@@ -58,13 +58,16 @@ func checkInventory(w http.ResponseWriter, r *http.Request) {
 	defer tracker.AddRequest()
 	log.Printf("Received request to check inventory. Requests in last 5 seconds: %d", requestCount)
 
+	// Log the headers received in the request
+	log.Printf("Headers received: %+v", r.Header)
+
 	vars := mux.Vars(r)
 	productID := vars["productId"]
 	log.Printf("Checking inventory for product ID: %s", productID)
 
 	// Check if the product ID is "500" and return a 500 status code if true
 	if productID == "500" && requestCount == 0 {
-		log.Printf("Product ID 500 requested for the first time. Simiulating a 500 error")
+		log.Printf("Product ID 500 requested for the first time. Simulating a 500 error")
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
