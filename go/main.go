@@ -74,7 +74,7 @@ func checkInventory(productID string) (InventoryResponse, error) {
 		return InventoryResponse{}, err
 	}
 
-	req.Header.Set("API-Key", fmt.Sprintf("%s", apiKey))
+	req.Header.Set("Choreo-API-Key", fmt.Sprintf("%s", apiKey))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
