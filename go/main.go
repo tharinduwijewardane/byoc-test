@@ -38,23 +38,24 @@ func (rt *RequestTracker) AddRequest() {
 
 	now := time.Now()
 	rt.requests = append(rt.requests, now)
-
-	// Remove requests older than 5 seconds
-	for len(rt.requests) > 0 && now.Sub(rt.requests[0]) > 5*time.Second {
-		rt.requests = rt.requests[1:]
-	}
 }
 
 func (rt *RequestTracker) CountRequests() int {
 	rt.mutex.Lock()
 	defer rt.mutex.Unlock()
 
+	// Remove requests older than 5 seconds
+	now := time.Now()
+	for len(rt.requests) > 0 && now.Sub(rt.requests[0]) > 5*time.Second {
+		rt.requests = rt.requests[1:]
+	}
+
 	return len(rt.requests)
 }
 
 func checkInventory(w http.ResponseWriter, r *http.Request) {
 	requestCount := tracker.CountRequests()
-	tracker.AddRequest()
+	defer tracker.AddRequest()
 	log.Printf("Received request to check inventory. Requests in last 5 seconds: %d", requestCount)
 
 	vars := mux.Vars(r)
