@@ -24,7 +24,7 @@ spec:
   outbound:
     serviceReferences:
       - name: choreo:///tharinduwijewardane/load-test/nov1-inventory-public/803f0/v1/PUBLIC
-        connectionConfig: 01ef9827-f991-1c0e-88cf-ac9b625b2a3a
+        connectionConfig: 01ef983e-9eb7-1938-95f4-0c2fd023face
         env:
           - from: ServiceURL
             to: INVENTORY_SERVICE_URL
