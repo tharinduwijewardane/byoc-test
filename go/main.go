@@ -62,7 +62,7 @@ func placeOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkInventory(productID string) (InventoryResponse, error) {
-	inventoryServiceURL := os.Getenv("INVENTORY_SERVICE_URL")
+	inventoryServiceURL := os.Getenv("INVENTORY_SERVICE_URL_INTERNAL")
 	choreoApiKey := os.Getenv("INVENTORY_CHOREO_API_KEY")
 
 	if inventoryServiceURL == "" {
