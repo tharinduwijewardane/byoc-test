@@ -21,32 +21,18 @@ spec:
       # The path should be relative to the docker context.
       schemaFilePath: openapi.yaml
   # +optional Outgoing connection details for the component.
-#  outbound:
-#    # +optional Defines the service references from the Internal Marketplace.
-#    serviceReferences:
-#      # +required Name of the service reference.
-#      - name: todo---choreo:///tharinduwijewardane/proj-2024-eu/oct2-1-oneep/803f0/v1/PUBLIC
-#        # +required Name of the connection instance.
-#        connectionConfig: todo---01ef8079-0e3c-1368-be13-187750bcc5cf
-#        # +optional Environment variables injected to the component for connection configuration.
-#        env:
-#          # +required Key name of the connection configuration.
-#          - from: ServiceURL
-#            to: INVENTORY_SERVICE_URL
-#          - from: ConsumerKey
-#            to: CONSUMER_KEY
-#          - from: ConsumerSecret
-#            to: CONSUMER_SECRET
-#          - from: TokenURL
-#            to: TOKEN_URL
-#          - from: APIKey
-#            to: INVENTORY_SERVICE_API_KEY
-#outbound:
-#  serviceReferences:
-#    - name: choreo:///aiteam/vqet/oct9-inventory-svc/803f0/v1/PROJECT
-#      connectionConfig: 01ef85e8-71cd-1e36-9c86-fc939e98afc8
-#      env:
-#        - from: ServiceURL
-#          to: INVENTORY_SERVICE_URL
-#        - from: APIKey
-#          to: INVENTORY_SERVICE_API_KEY
+  outbound:
+    serviceReferences:
+      - name: choreo:///tharinduwijewardane/load-test/nov1-inventory-public/803f0/v1/PUBLIC
+        connectionConfig: 01ef9827-f991-1c0e-88cf-ac9b625b2a3a
+        env:
+          - from: ServiceURL
+            to: INVENTORY_SERVICE_URL
+          - from: ConsumerKey
+            to: INVENTORY_CONSUMER_KEY
+          - from: ConsumerSecret
+            to: INVENTORY_CONSUMER_SECRET
+          - from: TokenURL
+            to: INVENTORY_TOKEN_URL
+          - from: ChoreoAPIKey
+            to: INVENTORY_CHOREO_API_KEY

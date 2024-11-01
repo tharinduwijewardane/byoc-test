@@ -63,7 +63,7 @@ func placeOrder(w http.ResponseWriter, r *http.Request) {
 
 func checkInventory(productID string) (InventoryResponse, error) {
 	inventoryServiceURL := os.Getenv("INVENTORY_SERVICE_URL")
-	apiKey := os.Getenv("INVENTORY_SERVICE_API_KEY")
+	choreoApiKey := os.Getenv("INVENTORY_CHOREO_API_KEY")
 
 	if inventoryServiceURL == "" {
 		return InventoryResponse{}, fmt.Errorf("inventory service URL not set")
@@ -74,7 +74,7 @@ func checkInventory(productID string) (InventoryResponse, error) {
 		return InventoryResponse{}, err
 	}
 
-	req.Header.Set("API-Key", fmt.Sprintf("%s", apiKey))
+	req.Header.Set("Choreo-API-Key", fmt.Sprintf("%s", choreoApiKey))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
