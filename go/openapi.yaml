@@ -15,7 +15,7 @@ paths:
               properties:
                 product_id:
                   type: string
-                  example: "12345"
+                  example: "123"
                 quantity:
                   type: integer
                   example: 1
