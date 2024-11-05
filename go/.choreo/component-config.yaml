@@ -21,18 +21,18 @@ spec:
       # The path should be relative to the docker context.
       schemaFilePath: openapi.yaml
   # +optional Outgoing connection details for the component.
-#  outbound:
-#    serviceReferences:
-#      - name: choreo:///tharinduwijewardane/load-test/nov1-inventory-public/803f0/v1/PUBLIC
-#        connectionConfig: 01ef983e-9eb7-1938-95f4-0c2fd023face
-#        env:
-#          - from: ServiceURL
-#            to: INVENTORY_SERVICE_URL
-#          - from: ConsumerKey
-#            to: INVENTORY_CONSUMER_KEY
-#          - from: ConsumerSecret
-#            to: INVENTORY_CONSUMER_SECRET
-#          - from: TokenURL
-#            to: INVENTORY_TOKEN_URL
-#          - from: ChoreoAPIKey
-#            to: INVENTORY_CHOREO_API_KEY
+  outbound:
+    serviceReferences:
+      - name: choreo:///choreopdpe2edev/tharinduw/nov4-1-inv-public/803f0/v1/PUBLIC
+        connectionConfig: 01ef9b74-89ab-16f0-9743-ee67233eec95
+        env:
+          - from: ServiceURL
+            to: INVENTORY_SERVICE_URL
+          - from: ConsumerKey
+            to: INVENTORY_CONSUMER_KEY
+          - from: ConsumerSecret
+            to: INVENTORY_CONSUMER_SECRET
+          - from: TokenURL
+            to: INVENTORY_TOKEN_URL
+          - from: ChoreoAPIKey
+            to: INVENTORY_CHOREO_API_KEY
