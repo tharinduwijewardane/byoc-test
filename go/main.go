@@ -7,15 +7,19 @@ import (
 	"time"
 )
 
-func main() {
-
-	stopAt := time.Now().Add(2 * time.Minute)
+func logFlooding(stopAt time.Time) {
 	for {
 		log.Println("log flooding test: logging current time: " + time.Now().String())
 		if time.Now().After(stopAt) {
 			break
 		}
 	}
+}
+
+func main() {
+
+	stopAt := time.Now().Add(2 * time.Minute)
+	go logFlooding(stopAt)
 
 	httpPort := 9090
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
