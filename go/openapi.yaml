@@ -1,54 +1,9 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: Choreo BYOC Examples
   description: This repository contains demo API implemented in different frameworks to showcase capabilities of choreo.
   version: '0.1'
 paths:
-  /proxy/:
-    post:
-      description: Auto generated using Swagger Inspector
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                args:
-                  type: string
-                host:
-                  type: string
-            examples:
-              '0':
-                value: |-
-                  {
-                      "host": "http://postman-echo.com",
-                      "args": "get?foo1=bar1&foo2=bar2"
-                  }
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            text/html; charset=utf-8:
-              schema:
-                type: string
-              examples: {}
-  /healthz/:
-    get:
-      description: Auto generated using Swagger Inspector
-      responses:
-        '200':
-          description: Auto generated using Swagger Inspector
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  healthy:
-                    type: boolean
-              examples:
-                '0':
-                  value: |
-                    {"healthy":true}
   /:
     get:
       description: Auto generated using Swagger Inspector
@@ -66,20 +21,54 @@ paths:
                 '0':
                   value: |
                     {"active":true}
-  /hello/:
+  /gen-logs:
     get:
-      description: Auto generated using Swagger Inspector
+      description: Generates log entries with specified size, count, and delay between entries
       parameters:
-        - name: name
+        - name: bytesPerEntry
           in: query
+          required: true
           schema:
-            type: string
-          example: world
+            type: integer
+            minimum: 11
+          description: Size of each log entry in bytes (must be greater than 10)
+        - name: entryCount
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Number of log entries to generate
+        - name: sleepMsPerEntry
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Milliseconds to sleep between generating each entry
       responses:
-        '200':
-          description: Auto generated using Swagger Inspector
+        '202':
+          description: Log generation started successfully
           content:
-            text/html; charset=utf-8:
+            text/plain:
               schema:
                 type: string
-              examples: {}
+                example: Log generation started
+        '400':
+          description: Invalid query parameters
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Invalid bytesPerEntry value in query params. Value must be greater than 10 because a single log entry of '{"msg":""}' uses 10 bytes
+  /flood-logs:
+    get:
+      description: Continuously generates timestamp log entries for 2 minutes
+      responses:
+        '200':
+          description: Log flooding started
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Log flooding started
