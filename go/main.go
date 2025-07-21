@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -24,15 +24,36 @@ func main() {
 	http.HandleFunc("/hello/", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "Hello %s", req.URL.Query().Get("name"))
 	})
+	http.HandleFunc("/print-body", func(w http.ResponseWriter, req *http.Request) {
+		if req.Method != http.MethodPost {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			fmt.Fprintf(w, "{\"error\": \"Method not allowed. Use POST.\"}")
+			return
+		}
+
+		body, err := io.ReadAll(req.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "{\"error\": \"Failed to read request body\"}")
+			return
+		}
+
+		// Print the body to console/logs
+		log.Printf("Received POST body: %s", string(body))
+
+		// Return confirmation with the body content
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, "{\"message\": \"Body received and printed\", \"body_length\": %d}", len(body))
+	})
 	http.HandleFunc("/five", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "{\"stauts\": 500}")
+		fmt.Fprintf(w, "{\"status\": 500}")
 	})
 	http.HandleFunc("/four09", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusConflict)
-		fmt.Fprintf(w, "{\"stauts\": 409}")
+		fmt.Fprintf(w, "{\"status\": 409}")
 	})
 	http.HandleFunc("/proxy/", func(w http.ResponseWriter, req *http.Request) {
 		if req.Method == http.MethodPost {
@@ -59,7 +80,7 @@ func main() {
 				w.Write([]byte(err.Error()))
 				w.WriteHeader(http.StatusInternalServerError)
 			}
-			body, err := ioutil.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
 			if err != nil {
 				w.Write([]byte(err.Error()))
 				w.WriteHeader(http.StatusInternalServerError)

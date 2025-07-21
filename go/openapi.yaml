@@ -32,6 +32,66 @@ paths:
               schema:
                 type: string
               examples: { }
+  /print-body:
+    post:
+      description: Receives and prints the request body to server logs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Any JSON object
+          text/plain:
+            schema:
+              type: string
+              description: Any plain text content
+          application/xml:
+            schema:
+              type: string
+              description: Any XML content
+        description: Request body content to be printed to logs
+      responses:
+        '200':
+          description: Confirmation that body was received and printed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  body_length:
+                    type: integer
+              examples:
+                '0':
+                  value: |
+                    {"message": "Body received and printed", "body_length": 35}
+        '405':
+          description: Method not allowed - only POST is supported
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                '0':
+                  value: |
+                    {"error": "Method not allowed. Use POST."}
+        '500':
+          description: Internal server error reading request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                '0':
+                  value: |
+                    {"error": "Failed to read request body"}
   /healthz/:
     get:
       description: Auto generated using Swagger Inspector
