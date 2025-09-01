@@ -94,7 +94,15 @@ paths:
                     {"error": "Failed to read request body"}
   /print-headers:
     get:
-      description: Receives and prints all request headers to server logs
+      description: Receives and prints all request headers to server logs in a single line. Send any custom headers and they will be printed.
+      parameters:
+        - name: X-Custom-Header
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Example custom header that will be printed to logs
+          example: custom-value
       responses:
         '200':
           description: Confirmation that headers were received and printed
@@ -111,72 +119,19 @@ paths:
                 '0':
                   value: |
                     {"message": "Headers received and printed", "header_count": 5}
-    post:
-      description: Receives and prints all request headers to server logs
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Any JSON object (optional)
-          text/plain:
-            schema:
-              type: string
-              description: Any plain text content (optional)
-        description: Optional request body content
-        required: false
-      responses:
-        '200':
-          description: Confirmation that headers were received and printed
+        '405':
+          description: Method not allowed - only GET is supported
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  error:
                     type: string
-                  header_count:
-                    type: integer
               examples:
                 '0':
                   value: |
-                    {"message": "Headers received and printed", "header_count": 5}
-    put:
-      description: Receives and prints all request headers to server logs
-      responses:
-        '200':
-          description: Confirmation that headers were received and printed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  header_count:
-                    type: integer
-              examples:
-                '0':
-                  value: |
-                    {"message": "Headers received and printed", "header_count": 5}
-    delete:
-      description: Receives and prints all request headers to server logs
-      responses:
-        '200':
-          description: Confirmation that headers were received and printed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  header_count:
-                    type: integer
-              examples:
-                '0':
-                  value: |
-                    {"message": "Headers received and printed", "header_count": 5}
+                    {"error": "Method not allowed. Use GET."}
   /healthz/:
     get:
       description: Auto generated using Swagger Inspector

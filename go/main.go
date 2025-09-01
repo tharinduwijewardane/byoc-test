@@ -46,14 +46,22 @@ func main() {
 		fmt.Fprintf(w, "{\"message\": \"Body received and printed\", \"body_length\": %d}", len(body))
 	})
 	http.HandleFunc("/print-headers", func(w http.ResponseWriter, req *http.Request) {
-		// Print the headers to console/logs
-		log.Println("=== Request Headers ===")
+		if req.Method != http.MethodGet {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			fmt.Fprintf(w, "{\"error\": \"Method not allowed. Use GET.\"}")
+			return
+		}
+
+		// Build headers string for single line output
+		var headerParts []string
 		for name, values := range req.Header {
 			for _, value := range values {
-				log.Printf("%s: %s", name, value)
+				headerParts = append(headerParts, fmt.Sprintf("%s: %s", name, value))
 			}
 		}
-		log.Println("======================")
+
+		// Print all headers in a single line
+		log.Printf("Request Headers: %s", strings.Join(headerParts, " | "))
 
 		// Return confirmation
 		w.Header().Set("Content-Type", "application/json")
