@@ -92,6 +92,91 @@ paths:
                 '0':
                   value: |
                     {"error": "Failed to read request body"}
+  /print-headers:
+    get:
+      description: Receives and prints all request headers to server logs
+      responses:
+        '200':
+          description: Confirmation that headers were received and printed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  header_count:
+                    type: integer
+              examples:
+                '0':
+                  value: |
+                    {"message": "Headers received and printed", "header_count": 5}
+    post:
+      description: Receives and prints all request headers to server logs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Any JSON object (optional)
+          text/plain:
+            schema:
+              type: string
+              description: Any plain text content (optional)
+        description: Optional request body content
+        required: false
+      responses:
+        '200':
+          description: Confirmation that headers were received and printed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  header_count:
+                    type: integer
+              examples:
+                '0':
+                  value: |
+                    {"message": "Headers received and printed", "header_count": 5}
+    put:
+      description: Receives and prints all request headers to server logs
+      responses:
+        '200':
+          description: Confirmation that headers were received and printed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  header_count:
+                    type: integer
+              examples:
+                '0':
+                  value: |
+                    {"message": "Headers received and printed", "header_count": 5}
+    delete:
+      description: Receives and prints all request headers to server logs
+      responses:
+        '200':
+          description: Confirmation that headers were received and printed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  header_count:
+                    type: integer
+              examples:
+                '0':
+                  value: |
+                    {"message": "Headers received and printed", "header_count": 5}
   /healthz/:
     get:
       description: Auto generated using Swagger Inspector

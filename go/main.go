@@ -45,6 +45,20 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, "{\"message\": \"Body received and printed\", \"body_length\": %d}", len(body))
 	})
+	http.HandleFunc("/print-headers", func(w http.ResponseWriter, req *http.Request) {
+		// Print the headers to console/logs
+		log.Println("=== Request Headers ===")
+		for name, values := range req.Header {
+			for _, value := range values {
+				log.Printf("%s: %s", name, value)
+			}
+		}
+		log.Println("======================")
+
+		// Return confirmation
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, "{\"message\": \"Headers received and printed\", \"header_count\": %d}", len(req.Header))
+	})
 	http.HandleFunc("/five", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
