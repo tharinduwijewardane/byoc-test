@@ -33,7 +33,8 @@ func handleTrigger(w http.ResponseWriter, r *http.Request) {
 
 func handleCrash(w http.ResponseWriter, r *http.Request) {
 	log.Println("crashing server...")
-	os.Exit(1)
+	go os.Exit(1)
+	io.WriteString(w, "Crash triggered\n")
 }
 
 func simulateOOMKill() {
