@@ -25,9 +25,9 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 
 	io.WriteString(w, "OOMKill Simulator\n")
 
-	if envValue == "YES" {
-		go os.Exit(1)
-	}
+// 	if envValue == "YES" {
+// 		go os.Exit(1)
+// 	}
 }
 
 func handleTrigger(w http.ResponseWriter, r *http.Request) {
