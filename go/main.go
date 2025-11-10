@@ -20,7 +20,6 @@ func main() {
 func handleRoot(w http.ResponseWriter, r *http.Request) {
 	//read a env value and print it
 	envValue := os.Getenv("SHOULD_CRASH")
-	io.WriteString(w, "SHOULD_CRASH: "+envValue+"\n")
 	// write a log as well
 	log.Println("received SHOULD_CRASH value: " + envValue)
 
