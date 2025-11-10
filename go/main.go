@@ -24,7 +24,6 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	log.Println("received SHOULD_CRASH value: " + envValue)
 
 	io.WriteString(w, "OOMKill Simulator\n")
-	io.WriteString(w, "Send a POST request to /trigger to simulate OOMKill\n")
 
 	if envValue == "YES" {
 		go os.Exit(1)
