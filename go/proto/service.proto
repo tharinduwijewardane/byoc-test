@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/MrSupiri/choreo-byoc-examples/go/proto";
+
+message Empty {}
+
+message CheckActiveResponse {
+  bool active = 1;
+}
+
+message HealthCheckResponse {
+  bool healthy = 1;
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
+message PrintBodyRequest {
+  string body = 1;
+}
+
+message PrintBodyResponse {
+  string message = 1;
+  int32 body_length = 2;
+}
+
+message PrintHeadersRequest {
+  map<string, string> headers = 1;
+}
+
+message PrintHeadersResponse {
+  string message = 1;
+  int32 header_count = 2;
+}
+
+message ProxyRequest {
+  string host = 1;
+  string args = 2;
+}
+
+message ProxyResponse {
+  string body = 1;
+}
+
+service TestService {
+  rpc CheckActive(Empty) returns (CheckActiveResponse);
+  rpc HealthCheck(Empty) returns (HealthCheckResponse);
+  rpc Hello(HelloRequest) returns (HelloResponse);
+  rpc PrintBody(PrintBodyRequest) returns (PrintBodyResponse);
+  rpc PrintHeaders(PrintHeadersRequest) returns (PrintHeadersResponse);
+  rpc SimulateInternalError(Empty) returns (Empty);
+  rpc SimulateConflict(Empty) returns (Empty);
+  rpc Proxy(ProxyRequest) returns (ProxyResponse);
+}

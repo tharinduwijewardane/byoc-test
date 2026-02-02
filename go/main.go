@@ -1,129 +1,108 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"strings"
+
+	pb "github.com/MrSupiri/choreo-byoc-examples/go/proto"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-func main() {
-	httpPort := 9090
-	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-
-		fmt.Fprintf(w, "{\"active\": true}")
-	})
-	http.HandleFunc("/healthz/", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-
-		fmt.Fprintf(w, "{\"healthy\": true}")
-	})
-	http.HandleFunc("/hello/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, "Hello %s", req.URL.Query().Get("name"))
-	})
-	http.HandleFunc("/print-body", func(w http.ResponseWriter, req *http.Request) {
-		if req.Method != http.MethodPost {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			fmt.Fprintf(w, "{\"error\": \"Method not allowed. Use POST.\"}")
-			return
-		}
-
-		body, err := io.ReadAll(req.Body)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "{\"error\": \"Failed to read request body\"}")
-			return
-		}
-
-		// Print the body to console/logs
-		log.Printf("Received POST body: %s", string(body))
-
-		// Return confirmation with the body content
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "{\"message\": \"Body received and printed\", \"body_length\": %d}", len(body))
-	})
-	http.HandleFunc("/print-headers", func(w http.ResponseWriter, req *http.Request) {
-		if req.Method != http.MethodGet {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			fmt.Fprintf(w, "{\"error\": \"Method not allowed. Use GET.\"}")
-			return
-		}
-
-		// Build headers string for single line output
-		var headerParts []string
-		for name, values := range req.Header {
-			for _, value := range values {
-				headerParts = append(headerParts, fmt.Sprintf("%s: %s", name, value))
-			}
-		}
-
-		// Print all headers in a single line
-		log.Printf("Request Headers: %s", strings.Join(headerParts, " | "))
-
-		// Return confirmation
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "{\"message\": \"Headers received and printed\", \"header_count\": %d}", len(req.Header))
-	})
-	http.HandleFunc("/five", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "{\"status\": 500}")
-	})
-	http.HandleFunc("/four09", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusConflict)
-		fmt.Fprintf(w, "{\"status\": 409}")
-	})
-	http.HandleFunc("/proxy/", func(w http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodPost {
-			decoder := json.NewDecoder(req.Body)
-			var data map[string]string
-			err := decoder.Decode(&data)
-			if err != nil {
-				w.Write([]byte(err.Error()))
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-
-			host := data["host"]
-			args := data["args"]
-
-			if len(host) == 0 {
-				host = "http://postman-echo.com"
-			}
-			if len(args) == 0 {
-				args = "get?foo1=bar1&foo2=bar2"
-			}
-
-			resp, err := http.Get(fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(args, "/")))
-			if err != nil {
-				w.Write([]byte(err.Error()))
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				w.Write([]byte(err.Error()))
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-			w.Write(body)
-			return
-		}
-		w.WriteHeader(http.StatusMethodNotAllowed)
-	})
-
-	fmt.Printf("listening on %v\n", httpPort)
-
-	err := http.ListenAndServe(fmt.Sprintf(":%d", httpPort), logRequest(http.DefaultServeMux))
-	if err != nil {
-		log.Fatal(err)
-	}
+type server struct {
+	pb.UnimplementedTestServiceServer
 }
 
-func logRequest(handler http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
-		handler.ServeHTTP(w, r)
-	})
+func (s *server) CheckActive(ctx context.Context, req *pb.Empty) (*pb.CheckActiveResponse, error) {
+	return &pb.CheckActiveResponse{Active: true}, nil
+}
+
+func (s *server) HealthCheck(ctx context.Context, req *pb.Empty) (*pb.HealthCheckResponse, error) {
+	return &pb.HealthCheckResponse{Healthy: true}, nil
+}
+
+func (s *server) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
+	return &pb.HelloResponse{Message: fmt.Sprintf("Hello %s", req.GetName())}, nil
+}
+
+func (s *server) PrintBody(ctx context.Context, req *pb.PrintBodyRequest) (*pb.PrintBodyResponse, error) {
+	body := req.GetBody()
+	log.Printf("Received body: %s", body)
+	return &pb.PrintBodyResponse{
+		Message:    "Body received and printed",
+		BodyLength: int32(len(body)),
+	}, nil
+}
+
+func (s *server) PrintHeaders(ctx context.Context, req *pb.PrintHeadersRequest) (*pb.PrintHeadersResponse, error) {
+	headers := req.GetHeaders()
+	var headerParts []string
+	for name, value := range headers {
+		headerParts = append(headerParts, fmt.Sprintf("%s: %s", name, value))
+	}
+	log.Printf("Request Headers: %s", strings.Join(headerParts, " | "))
+	return &pb.PrintHeadersResponse{
+		Message:     "Headers received and printed",
+		HeaderCount: int32(len(headers)),
+	}, nil
+}
+
+func (s *server) SimulateInternalError(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
+	return nil, status.Error(codes.Internal, "internal server error")
+}
+
+func (s *server) SimulateConflict(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
+	return nil, status.Error(codes.Aborted, "conflict")
+}
+
+func (s *server) Proxy(ctx context.Context, req *pb.ProxyRequest) (*pb.ProxyResponse, error) {
+	host := req.GetHost()
+	args := req.GetArgs()
+
+	if len(host) == 0 {
+		host = "http://postman-echo.com"
+	}
+	if len(args) == 0 {
+		args = "get?foo1=bar1&foo2=bar2"
+	}
+
+	resp, err := http.Get(fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(args, "/")))
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "proxy request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to read proxy response: %v", err)
+	}
+
+	return &pb.ProxyResponse{Body: string(body)}, nil
+}
+
+func loggingInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	log.Printf("gRPC call: %s", info.FullMethod)
+	return handler(ctx, req)
+}
+
+func main() {
+	port := 9090
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s := grpc.NewServer(grpc.UnaryInterceptor(loggingInterceptor))
+	pb.RegisterTestServiceServer(s, &server{})
+
+	fmt.Printf("gRPC server listening on %v\n", port)
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }
