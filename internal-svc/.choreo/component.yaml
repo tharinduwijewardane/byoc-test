@@ -1,7 +1,7 @@
 schemaVersion: "1.2"
 endpoints:
-  - name: endpoint-B
-    displayName: Endpoint B
+  - name: endpoint-int
+    displayName: Endpoint int
     service:
       basePath: /
       port: 9090
