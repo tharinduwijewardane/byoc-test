@@ -217,3 +217,35 @@ paths:
                 '0':
                   value: |
                     {"status":409}
+  /call-internal:
+    get:
+      description: Calls the internal service's greeting endpoint and returns the response
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Name to pass to the internal service greeting
+          example: world
+      responses:
+        '200':
+          description: Response from the internal service
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  greeting:
+                    type: string
+                  timestamp:
+                    type: string
+        '502':
+          description: Failed to reach internal service
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

@@ -1,12 +1,11 @@
 schemaVersion: "1.2"
 endpoints:
-  - name: byoc-test-go-endpoint
-    displayName: Byoc test go endpoint
+  - name: endpoint-B
+    displayName: Endpoint B
     service:
       basePath: /
       port: 9090
     type: REST
     networkVisibilities:
       - Project
-      - Public
     schemaFilePath: openapi.yaml

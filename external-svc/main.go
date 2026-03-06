@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -111,6 +112,38 @@ func main() {
 			return
 		}
 		w.WriteHeader(http.StatusMethodNotAllowed)
+	})
+
+	http.HandleFunc("/call-internal", func(w http.ResponseWriter, req *http.Request) {
+		internalURL := os.Getenv("INTERNAL_SVC_URL")
+		if internalURL == "" {
+			internalURL = "http://localhost:9091"
+		}
+
+		name := req.URL.Query().Get("name")
+		url := fmt.Sprintf("%s/greeting?name=%s", strings.TrimRight(internalURL, "/"), name)
+
+		log.Printf("Calling internal service: %s", url)
+		resp, err := http.Get(url)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadGateway)
+			fmt.Fprintf(w, "{\"error\": \"Failed to call internal service: %s\"}", err.Error())
+			return
+		}
+		defer resp.Body.Close()
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "{\"error\": \"Failed to read internal service response\"}")
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(resp.StatusCode)
+		w.Write(body)
 	})
 
 	fmt.Printf("listening on %v\n", httpPort)

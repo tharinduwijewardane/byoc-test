@@ -1,0 +1,59 @@
+openapi: 3.0.1
+info:
+  title: Internal Service
+  description: Internal service that provides greeting functionality.
+  version: '0.1'
+paths:
+  /:
+    get:
+      description: Root endpoint
+      responses:
+        '200':
+          description: Service active status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+  /healthz/:
+    get:
+      description: Health check endpoint
+      responses:
+        '200':
+          description: Health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  healthy:
+                    type: boolean
+  /greeting:
+    get:
+      description: Returns a greeting message with the given name
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Name to greet
+          example: world
+      responses:
+        '200':
+          description: Greeting response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  greeting:
+                    type: string
+                  timestamp:
+                    type: string
+              examples:
+                '0':
+                  value: |
+                    {"greeting": "Hello world from internal service!", "timestamp": "2025-01-01T00:00:00Z"}

@@ -1,0 +1,20 @@
+schemaVersion: "1.2"
+endpoints:
+  - name: endpoint-A
+    displayName: Endpoint A
+    service:
+      basePath: /
+      port: 9090
+    type: REST
+    networkVisibilities:
+      - Project
+      - Public
+    schemaFilePath: openapi.yaml
+configurations:
+  env:
+    - name: INTERNAL_SVC_URL
+      valueFrom:
+        configForm:
+          displayName: Internal Service URL
+          required: true
+          type: string
