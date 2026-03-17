@@ -124,7 +124,15 @@ func main() {
 		url := fmt.Sprintf("%s/greeting?name=%s", strings.TrimRight(internalURL, "/"), name)
 
 		log.Printf("Calling internal service: %s", url)
-		resp, err := http.Get(url)
+		httpReq, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "{\"error\": \"Failed to create request: %s\"}", err.Error())
+			return
+		}
+		httpReq.Header.Set("x-request-id", "req-id-1")
+		resp, err := http.DefaultClient.Do(httpReq)
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadGateway)

@@ -18,6 +18,8 @@ func main() {
 		fmt.Fprintf(w, "{\"healthy\": true}")
 	})
 	http.HandleFunc("/greeting", func(w http.ResponseWriter, req *http.Request) {
+		requestID := req.Header.Get("x-request-id")
+		log.Printf("x-request-id: %s", requestID)
 		name := req.URL.Query().Get("name")
 		if name == "" {
 			name = "world"
