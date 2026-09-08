@@ -1,12 +1,11 @@
 schemaVersion: "1.2"
 endpoints:
-  - name: byoc-test-go-endpoint
-    displayName: Byoc test go endpoint
+  - name: pkgcheck-endpoint
+    displayName: Buildpack package check endpoint
     service:
       basePath: /
-      port: 9090
+      port: 8080
     type: REST
     networkVisibilities:
       - Project
       - Public
-    schemaFilePath: openapi.yaml

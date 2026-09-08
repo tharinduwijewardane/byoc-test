@@ -1,0 +1,3 @@
+# Standard library only -- kept so the Google Python buildpack detects this
+# as a Python component. Do not add dependencies: the point of this component
+# is to report the run image's own packages, unchanged.
