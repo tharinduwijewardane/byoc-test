@@ -5,8 +5,7 @@ endpoints:
     service:
       basePath: /
       port: 9090
-    type: REST
+    type: GraphQL
     networkVisibilities:
       - Project
       - Public
-#    schemaFilePath: openapi.yaml

@@ -1,0 +1,24 @@
+type Query {
+  active: Boolean!
+  healthy: Boolean!
+  hello(name: String): String!
+  printHeaders: HeadersResult!
+  five: Int
+  four09: Int
+}
+
+type Mutation {
+  printBody(body: String!): BodyResult!
+  proxy(host: String, args: String): String!
+}
+
+type BodyResult {
+  message: String!
+  bodyLength: Int!
+}
+
+type HeadersResult {
+  message: String!
+  headerCount: Int!
+  headers: [String!]
+}
